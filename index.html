@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="מרחב העבודה של רכז הבוגרים באורט אמירים: מה עושים החודש, עם מי, ואיפה החומרים.">
+<meta name="theme-color" content="#1d3b4f">
+<title>עוגן – רכז בוגרים אמירים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* כיוון: יומן עבודה נקי של רכז – כחול-ים עמוק כעוגן, הדגשה בצבע חבל/זעפרן, נייר בהיר. פריסה: פס עליון + ניווט לשוניות + תוכן ברוחב קריא */
+:root{
+  --bg:#f4f2ec; --surface:#ffffff; --ink:#1b2a33; --muted:#5b6870;
+  --brand:#1d3b4f; --accent:#b8740a; --line:#dcd8cc; --soft:#e9eef1;
+  --ok:#2f7a4f; --warn:#a15c00;
+  --display:"Frank Ruhl Libre", "David Libre", Georgia, serif;
+  --body:"Assistant", "Noto Sans Hebrew", "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121a1f; --surface:#1a252c; --ink:#e7ecee; --muted:#a3b0b7;
+    --brand:#8fc0dc; --accent:#f0b24a; --line:#2c3a43; --soft:#22313a;
+    --ok:#6cc495; --warn:#f0b24a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121a1f; --surface:#1a252c; --ink:#e7ecee; --muted:#a3b0b7;
+  --brand:#8fc0dc; --accent:#f0b24a; --line:#2c3a43; --soft:#22313a;
+  --ok:#6cc495; --warn:#f0b24a; color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.7}
+a{color:var(--brand)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+header.top{background:var(--brand);color:#fff;padding:20px 16px 0}
+:root[data-theme="dark"] header.top{background:#0d2230}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) header.top{background:#0d2230}}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px}
+header .wrap{padding-inline:0}
+.brandline{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
+h1{font-family:var(--display);font-size:clamp(28px,5vw,40px);margin:0;line-height:1.2;text-wrap:balance}
+.sub{opacity:.88;font-size:16px}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;margin-top:16px;scrollbar-width:none}
+nav.tabs a{color:#fff;text-decoration:none;padding:10px 14px;min-height:44px;display:flex;align-items:center;border-radius:8px 8px 0 0;white-space:nowrap;font-weight:600;opacity:.8}
+nav.tabs a[aria-current="page"]{background:var(--bg);color:var(--ink);opacity:1}
+main{padding:24px 0 56px}
+h2{font-family:var(--display);font-size:28px;margin:0 0 6px;line-height:1.25;text-wrap:balance}
+h3{font-size:19px;margin:0 0 4px}
+.lead{color:var(--muted);margin:0 0 20px;max-width:65ch}
+.alert{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-inline-start:6px solid var(--accent);border-radius:8px;padding:14px 16px;margin-bottom:20px}
+.alert strong{color:var(--warn)}
+.months{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:16px}
+.months button{font:inherit;font-size:15px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;min-height:44px;cursor:pointer;white-space:nowrap}
+.months button[aria-pressed="true"]{background:var(--brand);color:var(--bg);border-color:var(--brand)}
+.months button .now{font-size:13px;color:var(--accent);font-weight:700}
+.months button[aria-pressed="true"] .now{color:inherit}
+.progress{display:flex;align-items:center;gap:12px;margin:4px 0 18px;color:var(--muted);font-size:15px}
+.bar{flex:1;max-width:320px;height:8px;background:var(--soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok)}
+.group{margin-bottom:22px}
+.group > .label{font-size:14px;font-weight:700;color:var(--muted);letter-spacing:.02em;margin-bottom:8px}
+ul.tasks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.task{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
+.task input{width:24px;height:24px;margin:3px 0 0;accent-color:var(--ok);cursor:pointer}
+.task label{font-weight:600;cursor:pointer}
+.task.done label{text-decoration:line-through;color:var(--muted)}
+.task .meta{grid-column:2;font-size:15px;color:var(--muted)}
+.task .meta b{color:var(--ink);font-weight:600}
+.links{grid-column:2;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:14px;padding:4px 10px;border:1px solid var(--line);border-radius:6px;text-decoration:none;background:var(--soft);color:var(--brand);min-height:32px}
+.chip svg{width:14px;height:14px;flex:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px}
+.card p{margin:4px 0;font-size:16px}
+.card .k{font-size:14px;font-weight:700;color:var(--muted)}
+table{border-collapse:collapse;width:100%;background:var(--surface);font-size:16px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:start;vertical-align:top}
+th{background:var(--soft);font-size:15px}
+.freq{font-weight:700;color:var(--brand);white-space:nowrap}
+.status{display:flex;gap:4px;flex-wrap:wrap}
+.status button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:6px 10px;min-height:40px;cursor:pointer}
+.status button[aria-pressed="true"][data-v="0"]{background:var(--soft);font-weight:700}
+.status button[aria-pressed="true"][data-v="1"]{background:var(--warn);color:#fff;border-color:var(--warn)}
+.status button[aria-pressed="true"][data-v="2"]{background:var(--ok);color:#fff;border-color:var(--ok)}
+.save{font-size:14px;color:var(--muted);margin-top:28px}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:14px;padding:18px 0 28px}
+@media (prefers-reduced-motion: no-preference){.bar i{transition:width .3s ease}}
+@media (max-width:480px){body{font-size:16px} .task{padding:12px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brandline">
+      <h1>עוגן</h1>
+      <span class="sub">מרחב העבודה של רכז הבוגרים · אורט אמירים בית שאן · מסלול ממשיכים · 2 מלגאים</span>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="מסכים">
+      <a href="#now">מה עושים החודש</a>
+      <a href="#routines">שגרות קבועות</a>
+      <a href="#people">עם מי עובדים</a>
+      <a href="#scholars">המלגאים</a>
+      <a href="#toolkit">ארגז כלים</a>
+      <a href="#goals">מעקב יעדים</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap" id="app" aria-live="polite"></main>
+<footer><div class="wrap">כל הקישורים מובילים לתיקייה המשותפת של ארגון הבוגרים בדרייב. · נבנה על ידי דובי כהן – פתרונות AI</div></footer>
+
+<script>
+/*@@STATE*/window.__STATE = {"done":{},"goals":{},"t":0};/*@@END*/
+</script>
+<script>
+(function(){
+var TEMPLATE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+var D = "https://drive.google.com/file/d/", F = "https://drive.google.com/drive/folders/";
+var L = {
+ root:["כל התיקייה המשותפת",F+"17wF_ooL3-B4netxvJF-XaBtxHB2xP2QT"],
+ role:["הגדרת תפקיד רכז בוגרים",D+"1YEx8INpjqKOXCotPATBtHd80bIb1SNHW/view"],
+ steps:["צעדים בהקמת קהילה",D+"1B2WexuTwMiO3FSYLmfoAvB44XNWmh15V/view"],
+ plan:["תכנית רבעונית – ממשיכים",D+"1K7u4_itc1Os7Dke5rxn9oX4eMHFXqDGx/view"],
+ splan:["תכנית העבודה עם המלגאים",D+"1eOl8_4XMjXMn8h-DKZn07SQJZfFrBpeX/view"],
+ kick:["טופס ״יוצאים לדרך״",D+"1nqp6BPtDHqRSVu8w5zKqJUSbDTPPOpfq/view"],
+ hours:["דוח שעות למלגאי",D+"1uPokeoZc5Pc6ID3RYVTTOoNjdLLZG4rT/view"],
+ sdeck:["מצגת המלגאים",D+"1pt_juqgI6Z_BIwbx8u6QFJTh99Y6omSu/view"],
+ svid:["סרטון ״מלגאים מדברים״",D+"11HTjA-3z9ITCcaAEMFowb9CJjM098OnL/view"],
+ kitplan:["ערכת נבחרת יב׳ – מדריך לרכז",D+"1tCKojPe0Ke4Ci0BI0mIT-YalFLchnkUJ/view"],
+ k1:["ערכה 1",D+"12uuViVtJOCQbLkoPQX4eILbDqmyKm1OE/view"],
+ k2:["ערכה 2",D+"1Yz32xvoXxR1OFHu-dQ-tOgsyVevVXZ1B/view"],
+ k3:["ערכה 3",D+"1yICn2Sm_6p2wTzLoeZGRSiJshuqxpiH6/view"],
+ k4:["ערכה 4",D+"1L7psqGgHrAYmfkitwGV8NmLxzvscnmGo/view"],
+ k5:["ערכה 5",D+"1N5mDP_KIUG9jow8i5978sHFwjgJoWPbD/view"],
+ survey12:["טופס סקר יב׳",D+"1mr0oSg8NTklwjKPn6kC8UBkTkRDwM8CS/view"],
+ survey12g:["דף מלווה לסקר יב׳",D+"1ywgrAjmeh0YkNx1oc43cno3LeR6uHDOY/view"],
+ survey12m:["עוד על הסקר",D+"1GjaMTqlE9lImRfnpapCOpAB7aeFiC_YN/view"],
+ dyn:["מיפוי דינאמי – שיחת מחנך",D+"1kgwM8sItkoR0KGkKGtY1SZWAWhUnX9Pt/view"],
+ focus:["שאלון לקבוצת מיקוד",D+"1Ohn_hTxHXj_wRXogJ-XQIAQ0nAw5YHoV/view"],
+ focusg:["הנחיה להעברת השאלון",D+"1sekAB1Qkt1sofArws9xlCd-F4u75je2K/view"],
+ learned:["מה למדנו מתלמידי יב׳",D+"1Dpq197bY42vQ1kB4p-ljSGpQ4z6RoKto/view"],
+ campus:["קמפוס – הכנה לחיים",D+"1U5_rkB-o_ZQ6oz4QWCg9ScJr6shr5BVT/view"],
+ intro12:["הצגת ארגון הבוגרים ליב׳",D+"1FVL6-FwmwDB63LdrByoV485iOQtcjyLJ/view"],
+ alumsurvey:["טופס סקר לבוגרים",D+"1lhBf6J-bXCl-ATSVyhNfNtgAkwyr0uME/view"],
+ alumanalyze:["הפצה, ניתוח ומענה לסקר",D+"14MT1CDJ1tfJ3NFkEwB9XzXUSdvF2YTJH/view"],
+ panel:["מדריך פאנל בוגרים",D+"1ktmYVbYFBeDirqyj2eR4FqHBGTb6yxUJ/view"],
+ msgs:["דף מסרים לרכז",D+"14kj4Q8AFFmn71edYoahi94fTLDlSJAVJ/view"],
+ conf:["מצגת לכנס",D+"1e0maXh0G0mQLJ496I9zH034-ZMhqWqY_/view"],
+ memorial:["אירוח בוגרים ביום הזיכרון",D+"1TVpDv24rLSS-QAOEq8q8pfgk8B4-ZVPE/view"],
+ circle:["הנחיית מעגל שיח",D+"1iIjwGH3HDfrIho-gbeZ-UdUEZ-hzRu-0/view"],
+ diplomas:["חלוקת תעודות בגרות",D+"1brTsrwjP1dRsQGqVx4zir3qGsZObb-ir/view"],
+ flyer:["פלייר הצטרפות",D+"18oXpaU43E74_ksWxgoemIWsyZDw8pr0O/view"],
+ greet:["ברכות לשליחה לבוגרים",F+"1sMwvob0ew8ihss7askVGJJPVleCKKSdy"],
+ always:["״תמיד איתך״ – ליווי חיילים",D+"1XwRg8irPjuLTusomWqs9jCRPRPozJElw/view"],
+ staffdeck:["מצגת לחדר המורים",D+"1SFh1TXx-EPW0pf2q38dMrWFJYEzxjmnH/view"],
+ staffact:["פעילות לצוות החינוכי",D+"1mRLXwDOdllG64wcp1Vjnxu4ljOvxruOg/view"],
+ coorddeck:["מצגת רכזים",D+"1wi8xI50q5tIheaFt543uK7WfDDtGeCbG/view"],
+ rights:["זכויות והזדמנויות לצעירים",D+"1ycCMHQYLoXvBNmKKZ1ZzRV2GNCOvs-OR/view"],
+ sites:["אתרי מידע",D+"12GBbJeoCLUzN-Vxi3OttUa03O05CNHiy/view"],
+ yated:["תכנית יתד – מצגת",D+"1fieJ7_68MDxlvXFeBbSKqSDgqUYO0HWR/view"],
+ news:["ניוזלטרים לדוגמה",F+"1p7CqKitXn8xwvUaPZgfKMvviPwwyG0Dv"],
+ meet:["סיכום מפגש רכזים 19.3",D+"1FNZnu0GRAruVZEcpac9tLiHs2oo19hmY/view"]
+};
+// משימות לפי חודש (0=ספטמבר ... 11=אוגוסט). [מזהה, משימה, עם מי, איך, קישורים]
+var M = ["ספטמבר","אוקטובר","נובמבר","דצמבר","ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט"];
+var T = [
+ [["s1","להצטרף לקהילת הרכזים ולפורום","מלווה ארגון הבוגרים","לרשום ביומן את מועדי ההשתלמות והפורום לכל השנה.",["role"]],
+  ["s2","לשלוח ברכה לחגי תשרי בקבוצה השקטה","לבד","ברכה קצרה עם תמונה. יש דוגמאות מוכנות.",["greet"]],
+  ["s3","לפתוח מחדש את מאגר הבוגרים המתנדבים משנה שעברה","לבד","לפנות אישית למי שהתנדב בשנה שעברה ולבדוק אם הוא ממשיך.",[]]],
+ [["o1","פגישת התנעה עם 2 המלגאים","המלגאים","להציג את משמעות התפקיד, את השגרה (זום שבועי, הגעה פעם ב־3 שבועות) ואת 140 השעות. אחרי הפגישה למלא את ״יוצאים לדרך״ ולשלוח לארגון הבוגרים.",["kick","splan","sdeck"]],
+  ["o2","מפגש ראשון עם שותפי התפקיד","מוביל שכבת יב׳, רכז חברתי, רכז הכנה לצה״ל","להסביר מה הרכז עושה ומה מבקשים מכל אחד. לקבוע מפגש סנכרון חודשי.",["msgs"]],
+  ["o3","להפעיל את ״תמיד איתך״ למתגייסים","מחנכים ומורים מלווים","כל מורה מלווה בוגר אחד או שניים ושולח הודעה קצרה פעם בשבוע.",["always"]],
+  ["o4","מפגש עבודה עם מרכז הצעירים ויתד/ניצוץ","מנהל מרכז הצעירים, עו״ס יתד","לגבש יחד תכנית עבודה שנתית: מה הם נותנים לבוגרים ומתי.",["yated","rights"]],
+  ["o5","להתחיל לעבוד עם מערכת ״קשרי קהילה״","גורם הדיגיטל של הרשת","לבקש הרשאה ולהכניס את פרטי הבוגרים הקיימים.",[]]],
+ [["n1","חשיפה ראשונה בחדר המורים","הנהלה וצוות המורים","10–15 דקות בישיבת צוות: החזון ומה מבקשים מהמורים. אפשר להשתמש בפעילות המוכנה.",["staffdeck","staffact"]],
+  ["n2","להציג את ארגון הבוגרים למחנכי יב׳ ובכיתות","מחנכי יב׳","שיעור חינוך עם המחנך בכיתה. להדגיש ״מה יוצא לי מזה״, ורצוי להביא בוגר.",["intro12"]],
+  ["n3","לגייס את נבחרת יב׳ ולקיים מפגש ראשון","2–3 תלמידים מכל כיתה","להשתמש בערכה 1 (״פיצוח קוד הקהילה״), 45 דקות.",["kitplan","k1"]],
+  ["n4","להשיק את סקר יב׳ – פעימה 1","מחנכי יב׳, רכז הכנה לצה״ל, הנבחרת","הנבחרת עוזרת להפיץ בכיתות. התשובות נשארות אצל הרכז בלבד.",["survey12","survey12g"]],
+  ["n5","להפיץ את שאלון הצרכים לבוגרים","מחנכים, המלגאים","להפיץ בקבוצות המחזורים ולבקש מהמלגאים לעודד מילוי.",["alumsurvey","alumanalyze"]],
+  ["n6","לכתוב את התכנית השנתית ולאשר אותה עד 30.11","מנהל בית הספר","כולל מועדי הסקרים, האירועים והיעדים המספריים של בית הספר.",["plan","splan"]],
+  ["n7","לחלק לכל מלגאי רשימת בוגרים ללוות","המלגאים","לפי תוצאות הסקר. כל בוגר משויך למלגאי אחד.",["splan"]],
+  ["n8","לאתר ולהכשיר מנטורים מהבוגרים הוותיקים","בוגרים בצבא, באקדמיה ובעבודה","לבנות רשימה ראשונית. היעד: 4–5 זוגות עד ינואר.",[]]],
+ [["d1","לנתח את סקר יב׳ ולתת מענים","מובילי השכבה, רכז הכנה לצה״ל","לסמן בצבע את מי שענה 1–2 על שביעות רצון או 4–5 על רצון בהכוונה, ולפנות אליהם קודם.",["survey12g","dyn"]],
+  ["d2","לנתח את שאלון הבוגרים ולאתר ״נורות אדומות״","המלגאים","להגיב בקבוצה לכל מי שענה (״קיבלנו, ראינו״) ולפנות אישית למי שצריך.",["alumanalyze"]],
+  ["d3","פאנל בוגרים: ״מסלולי המשך״","בוגרים במכינות, בשנת שירות ובשירות לאומי","לפני סגירת ההרשמות. לפי המדריך: הכנה, סבב שאלות, משוב.",["panel"]],
+  ["d4","להשלים 3 מפגשי צוות היגוי עד סוף דצמבר","צוות ההיגוי הבית־ספרי","",[]],
+  ["d5","מפגש נבחרת – ערכה 2","נבחרת יב׳","",["k2"]]],
+ [["j1","ישיבת סטטוס אמצע שנה","מנהל, מלווה אורט, מנהל האזור","להציג מה הושג מול היעדים בלשונית ״מעקב יעדים״.",["plan"]],
+  ["j2","להתחיל את המנטורינג: להצמיד מנטור לכל מונחה","המנטורים","יעד: 4–5 זוגות.",[]],
+  ["j3","להגיע ל־40% מהבוגרים במערכת","גורם הדיגיטל של הרשת","",[]],
+  ["j4","לסכם מתווה עבודה כתוב עם הרשות","מרכז הצעירים","",[]],
+  ["j5","מפגש נבחרת – ערכה 3","נבחרת יב׳","",["k3"]]],
+ [["f1","יום הבוגר ופעילות שיא שכבתית","הנבחרת, הרכז החברתי","להזמין בוגרים בקבוצה השקטה ובפנייה אישית דרך המלגאים.",["circle"]],
+  ["f2","חשיפה שנייה בחדר המורים: סיפורי הצלחה","הנהלה","",[]],
+  ["f3","לשקול יום ״קמפוס – הכנה לחיים״ ליב׳","צוות מוביל: מורים, הורים, בוגרים","סדנאות בחירה: כסף, צבא, קריירה, חוסן.",["campus"]],
+  ["f4","סקר יב׳ – פעימה 2","הנבחרת","",["survey12"]]],
+ [["m1","סנכרון לקראת פורים, האביב ויום הזיכרון","שותפי התפקיד","",[]],
+  ["m2","לשבץ בוגרים ותיקים בפאנלים שכבתיים","בוגרים מהמאגר","",["panel"]],
+  ["m3","מפגש רבעוני עם מרכז הצעירים","מרכז הצעירים","",[]],
+  ["m4","מפגש נבחרת – ערכה 4","נבחרת יב׳","",["k4"]]],
+ [["a1","יום הזיכרון: להזמין בוגרים ולהכין מרחב אירוח","מורה מארח, הנהלה, מחנכים","הזמנה בוואטסאפ, עמדת רישום עם QR, תחנות שיח בכיתות, שילוב בטקס.",["memorial","greet"]],
+  ["a2","סקר יב׳ – פעימה 3 (נעילה)","הנבחרת, רכז הכנה לצה״ל","לאסוף טלפון ומייל פרטיים, כי המייל של בית הספר ייסגר.",["survey12"]],
+  ["a3","לשלב בוגרים בטקסי יום העצמאות","הרכז החברתי","",[]]],
+ [["y1","פאנלים מסכמים לשכבת יב׳","בוגרים","",["panel"]],
+  ["y2","מפגשי תמיכה לזוגות המנטורים","המנטורים","",[]]],
+ [["u1","מאמץ אחרון להשלמת פעימה 3","מחנכי יב׳","",[]],
+  ["u2","חלוקת תעודות בגרות: טקס, מעגלי שיח ועמדת הצטרפות","הנהלה, מחנכים","",["diplomas","flyer"]],
+  ["u3","מפגש נבחרת – ערכה 5: העברת המקל לשכבת יא׳","נבחרת יב׳, רכז השכבה","",["k5"]],
+  ["u4","סיכום שנה עם המנהל ויעדים לשנה הבאה","מנהל, מלווה אורט, מנהל האזור","",["plan"]],
+  ["u5","מפגש סיכום לזוגות המנטורים ואיסוף משוב","המנטורים","",[]]],
+ [["l1","להתניע ״תמיד איתך״ למחזור החדש לפני החופש","מובילי השכבה, מורים","לבנות רשימה של כ־10 תלמידים, להתאים מורה לכל אחד ולשתף את המנהל.",["always"]],
+  ["l2","ברכת פרידה למסיימים וברכות למתגייסים","לבד","",["greet"]],
+  ["l3","סיכום שנה עם המלגאים וחתימה על דוחות השעות","המלגאים","",["hours"]]],
+ [["g1","להנגיש מידע על מלגות, פסיכומטרי ותכניות קיץ","מרכז הצעירים","",["rights","sites"]],
+  ["g2","לרענן את מאגר הבוגרים המתנדבים לשנה הבאה","לבד","",[]]]
+];
+var R = ["פגישה עם המנהל","פגישה עם מלווה ארגון הבוגרים","פורום / השתלמות רכזים","סנכרון עם שותפי התפקיד","עדכון אחד לפחות בקבוצה השקטה + ברכת ראש חודש","דוח חודשי מכל אחד מ־2 המלגאים"];
+var G = [
+ ["פיתוח מקצועי","מפגשים חודשיים עם המנהל והמלווה","100% מהמפגשים"],
+ ["פיתוח מקצועי","השתתפות בהשתלמויות ובפורום","100%"],
+ ["שותפויות בבית הספר","מפגשי צוות היגוי","3 עד סוף דצמבר + 1 בכל רבעון"],
+ ["שותפויות בבית הספר","חשיפות בחדר המורים","1 עד דצמבר + 1 ברבעון הבא"],
+ ["מאגר מידע","בוגרים רשומים במערכת","40% עד ינואר · 70% עד סוף השנה"],
+ ["מאגר מידע","פילוחי נתונים","1 בכל רבעון"],
+ ["שכבת יב׳","נציגים בנבחרת","2–3 מכל כיתה"],
+ ["שכבת יב׳","אחוז מענה לסקר יב׳","70% ומעלה בכל פעימה"],
+ ["קהילת הבוגרים","״תמיד איתך״ למתגייסים","כיסוי מלא של המתגייסים"],
+ ["קהילת הבוגרים","עדכון בקבוצה השקטה","1 לפחות בחודש"],
+ ["שותפויות ביישוב","מפגשים עם מרכז הצעירים / יתד","1 לפחות ברבעון"],
+ ["שותפויות ביישוב","מתווה עבודה כתוב עם הרשות","עד ינואר"],
+ ["מנטורינג","זוגות מנטור–מונחה","4–5 עד ינואר · 8–10 עד סוף השנה"],
+ ["מנטורינג","פאנלים עם בוגרים","3 לפחות בשנה"],
+ ["מלגאים","שעות התנדבות לכל מלגאי","140 (120 בבית הספר)"],
+ ["מלגאים","דוחות חודשיים","מכל מלגאי בכל חודש"]
+];
+var P = [
+ ["מנהל/ת בית הספר","בבית הספר","פגישה חודשית קבועה. כדאי לקבוע עם המזכירה שעה קבועה במערכת, כי בלי זה הפגישות נדחות.","אישור התכנית, גיבוי מול הצוות, ישיבות סטטוס."],
+ ["מחנכי יב׳ ומוביל השכבה","בבית הספר","סנכרון חודשי.","הצגה בכיתות, הפצת סקר יב׳, שיחות מיפוי אישיות, איתור תלמידים שצריכים ליווי."],
+ ["רכז הכנה לצה״ל","בבית הספר","סנכרון חודשי.","נתוני גיוס, מענה לתלמידים עם קושי מול צה״ל."],
+ ["הרכז החברתי","בבית הספר","סנכרון חודשי.","שילוב בוגרים בטקסים, ביום הבוגר ובאירועים."],
+ ["המד״ן / היועצת","בבית הספר","לפי הצורך.","נתונים על תלמידי יב׳; הפניה כשמזהים מצוקה."],
+ ["המורים המלווים (״תמיד איתך״)","בבית הספר","קשר שבועי.","הודעה קצרה פעם בשבוע לבוגר שהם מלווים. הרכז הוא הכתובת שלהם לכל שאלה."],
+ ["מלווה ארגון הבוגרים","ברשת אורט","פגישה חודשית.","התייעצות, הכשרה, חומרים, טיפול במקרים מורכבים."],
+ ["קהילת הרכזים ומנהל האזור","ברשת אורט","פורום חודשי; ישיבות סטטוס באמצע השנה ובסופה.","למידה מעמיתים, ניוזלטר, רעיונות."],
+ ["מרכז הצעירים העירוני","ביישוב","מפגש אחד לפחות ברבעון.","מלגות, פסיכומטרי, תעסוקה, אירועים לבוגרים משוחררים."],
+ ["יתד / ניצוץ (רווחה)","ביישוב","לפי הצורך.","עו״ס לצעירים במצבי קושי."],
+ ["נבחרת יב׳","מהתלמידים","מפגש לפי הערכות (5 בשנה).","הפצת סקרים בכיתות, מיזמים, ייצוג השכבה."],
+ ["המנטורים","מהבוגרים","הצמדה מינואר.","ליווי תלמידים ובוגרים צעירים, פאנלים."]
+];
+var K = [
+ ["להבין את התפקיד",["role","steps","msgs","coorddeck","meet"]],
+ ["תכנית העבודה",["plan","splan"]],
+ ["שכבת יב׳",["intro12","survey12","survey12g","survey12m","dyn","focus","focusg","learned","campus"]],
+ ["נבחרת יב׳",["kitplan","k1","k2","k3","k4","k5"]],
+ ["קשר עם הבוגרים",["alumsurvey","alumanalyze","greet","flyer","news"]],
+ ["חיילים",["always"]],
+ ["אירועים",["panel","memorial","diplomas","circle","conf"]],
+ ["הצוות החינוכי",["staffdeck","staffact"]],
+ ["זכויות ומענים לצעירים",["rights","sites","yated"]],
+ ["המלגאים",["kick","hours","splan","sdeck","svid"]],
+ ["הכול",["root"]]
+];
+
+var S = window.__STATE || {done:{},goals:{},t:0};
+try{ var ls = JSON.parse(localStorage.getItem("ogen-state")||"null"); if(ls && ls.t > (S.t||0)) S = ls; }catch(e){}
+S.done = S.done||{}; S.goals = S.goals||{};
+var app = document.getElementById("app");
+var ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>';
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+function chips(keys){ if(!keys||!keys.length) return ""; return '<div class="links">'+keys.map(function(k){var l=L[k];return '<a class="chip" href="'+l[1]+'" target="_blank" rel="noopener">'+ICON+esc(l[0])+'</a>';}).join("")+'</div>'; }
+function schoolMonth(){ var m = new Date().getMonth(); return (m+4)%12; }
+var sel = schoolMonth();
+
+var artifactNS = null, pending = null;
+if(window.claude && claude.use){ claude.use("artifact").then(function(a){ artifactNS = a; }).catch(function(){}); }
+function persist(){
+  S.t = Date.now();
+  try{ localStorage.setItem("ogen-state", JSON.stringify(S)); }catch(e){}
+  clearTimeout(pending);
+  pending = setTimeout(function(){
+    if(!artifactNS) return;
+    var html = TEMPLATE.replace(/\/\*@@STATE\*\/[\s\S]*?\/\*@@END\*\//, '/*@@STATE*/window.__STATE = '+JSON.stringify(S).replace(/</g,"\\u003c")+';/*@@END*/');
+    artifactNS.publish(html).catch(function(){});
+  }, 1500);
+}
+
+function viewNow(){
+  var tasks = T[sel], all = tasks.length + R.length, n = 0;
+  tasks.forEach(function(t){ if(S.done[t[0]]) n++; });
+  R.forEach(function(r,i){ if(S.done["r"+sel+"-"+i]) n++; });
+  var cur = schoolMonth();
+  var h = '<h2>מה עושים ב'+M[sel]+'</h2><p class="lead">סמן כל משימה שבוצעה. ליד כל משימה כתוב עם מי עובדים עליה וכיצד, ויש קישור לחומר המתאים.</p>';
+  if(cur<=2) h += '<div class="alert"><div><strong>דחוף:</strong> התכנית השנתית צריכה להיות מאושרת אצל המנהל עד 30.11, כולל מועדי הסקרים והיעדים המספריים.</div></div>';
+  h += '<div class="months" role="group" aria-label="בחירת חודש">'+M.map(function(m,i){return '<button type="button" data-m="'+i+'" aria-pressed="'+(i===sel)+'">'+m+(i===cur?' <span class="now">· עכשיו</span>':'')+'</button>';}).join("")+'</div>';
+  var pct = Math.round(n/all*100);
+  h += '<div class="progress"><span>'+n+' מתוך '+all+' בוצעו</span><span class="bar"><i style="width:'+pct+'%"></i></span></div>';
+  h += '<div class="group"><div class="label">משימות החודש</div><ul class="tasks">'+tasks.map(function(t){
+    var d=!!S.done[t[0]];
+    return '<li class="task'+(d?' done':'')+'"><input type="checkbox" id="t-'+t[0]+'" data-id="'+t[0]+'"'+(d?' checked':'')+'><label for="t-'+t[0]+'">'+esc(t[1])+'</label><div class="meta"><b>עם מי:</b> '+esc(t[2])+(t[3]?' · '+esc(t[3]):'')+'</div>'+chips(t[4])+'</li>';
+  }).join("")+'</ul></div>';
+  h += '<div class="group"><div class="label">שגרה של כל חודש</div><ul class="tasks">'+R.map(function(r,i){
+    var id="r"+sel+"-"+i, d=!!S.done[id];
+    return '<li class="task'+(d?' done':'')+'"><input type="checkbox" id="t-'+id+'" data-id="'+id+'"'+(d?' checked':'')+'><label for="t-'+id+'">'+esc(r)+'</label></li>';
+  }).join("")+'</ul></div>';
+  return h;
+}
+function viewRoutines(){
+  var rows=[["כל שבוע","זום עם 2 המלגאים (הנחיה, מעקב אחר הבוגרים, התלבטויות)"],["כל שבוע","קשר עם המורים המלווים ב״תמיד איתך״"],["כל 3 שבועות","כל מלגאי מגיע לבית הספר"],["כל חודש","פגישה עם המנהל"],["כל חודש","פגישה עם מלווה ארגון הבוגרים"],["כל חודש","פורום / השתלמות רכזים"],["כל חודש","סנכרון עם מוביל יב׳, הרכז החברתי ורכז הכנה לצה״ל"],["כל חודש","עדכון בקבוצה השקטה + ברכת ראש חודש"],["כל חודש","קבלת דוח חודשי מכל מלגאי"],["כל חודשיים","פילוח נתונים במערכת קשרי קהילה"],["כל רבעון","מפגש צוות היגוי בית־ספרי"],["כל רבעון","מפגש עם מרכז הצעירים / יתד"],["אמצע השנה","ישיבת סטטוס: מנהל, מלווה אורט, מנהל האזור"],["סוף השנה","ישיבת סיכום והיערכות לשנה הבאה"]];
+  return '<h2>שגרות קבועות</h2><p class="lead">אלה הדברים שחוזרים כל הזמן. כדאי להכניס אותם ליומן פעם אחת כאירועים חוזרים, וכך לא צריך לזכור אותם.</p><div class="tablewrap"><table><thead><tr><th>מתי</th><th>מה</th></tr></thead><tbody>'+rows.map(function(r){return '<tr><td class="freq">'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join("")+'</tbody></table></div>';
+}
+function viewPeople(){
+  return '<h2>עם מי עובדים</h2><p class="lead">רכז הבוגרים לא עובד לבד. העבודה שלו היא לחבר בין האנשים האלה, והוא לא נכנס לתחום של אף אחד מהם.</p><div class="grid">'+P.map(function(p){return '<div class="card"><div class="k">'+p[1]+'</div><h3>'+p[0]+'</h3><p><b>מתי:</b> '+p[2]+'</p><p><b>מה מבקשים:</b> '+p[3]+'</p></div>';}).join("")+'</div>';
+}
+function viewScholars(){
+  return '<h2>המלגאים (2)</h2><p class="lead">סטודנטים בוגרי בית הספר שמלווים את הבוגרים הצעירים בקשר אישי. הרכז מנחה אותם ואחראי עליהם.</p>'+
+  '<div class="grid">'+
+  '<div class="card"><h3>המסגרת</h3><p>140 שעות התנדבות בשנה לכל מלגאי: 120 בבית הספר ו־20 במרכז הצעירים או ביוזמות של קרן ברק.</p><p>זום שבועי עם הרכז, והגעה לבית הספר לפחות פעם בשלושה שבועות.</p></div>'+
+  '<div class="card"><h3>מה המלגאי עושה</h3><p>שומר על קשר קבוע (טלפון/וואטסאפ) עם רשימת הבוגרים שקיבל מהרכז, בודק מה הם צריכים ומחבר אותם לזכויות ולשירותים.</p><p>עוזר בהפצת הסקרים, באירועים ובפאנלים, ומוביל מיזם חברתי.</p></div>'+
+  '<div class="card"><h3>מה הרכז עושה</h3><p>מגייס, מקיים התנעה, מחלק רשימות, מנחה בזום, עוקב אחר הדיווחים ומטפל בהפניות במצבי קיצון.</p></div>'+
+  '<div class="card" style="border-inline-start:6px solid var(--accent)"><h3>סימני מצוקה</h3><p>מלגאי שמזהה סימן מצוקה מדווח לרכז <b>מיד</b>. הרכז מפנה לגורם המקצועי (יועצת, יתד, מרכז הצעירים, ארגון הבוגרים) ולא משאיר את זה אצל המלגאי.</p></div>'+
+  '<div class="card"><h3>טפסים</h3><p>אחרי ההתנעה: ״יוצאים לדרך״. כל חודש: דוח פעילות. בסוף השנה: דוח שעות חתום.</p>'+chips(["kick","hours"])+'</div>'+
+  '<div class="card"><h3>להכרות</h3>'+chips(["splan","sdeck","svid"])+'</div>'+
+  '</div>';
+}
+function viewToolkit(){
+  return '<h2>ארגז כלים</h2><p class="lead">כל החומרים מהתיקייה המשותפת, מסודרים לפי מה שצריך לעשות.</p><div class="grid">'+K.map(function(k){return '<div class="card"><h3>'+k[0]+'</h3>'+chips(k[1])+'</div>';}).join("")+'</div>';
+}
+function viewGoals(){
+  var labels=["טרם החל","בביצוע","הושלם"], done=0;
+  G.forEach(function(g,i){ if((S.goals[i]||0)===2) done++; });
+  return '<h2>מעקב יעדים</h2><p class="lead">היעדים של מסלול ממשיכים. כדאי לעדכן לפני כל פגישה עם המנהל.</p><div class="progress"><span>'+done+' מתוך '+G.length+' הושלמו</span><span class="bar"><i style="width:'+Math.round(done/G.length*100)+'%"></i></span></div><div class="tablewrap"><table><thead><tr><th>תחום</th><th>מדד</th><th>יעד</th><th>סטטוס</th></tr></thead><tbody>'+G.map(function(g,i){var v=S.goals[i]||0;return '<tr><td>'+g[0]+'</td><td>'+g[1]+'</td><td>'+g[2]+'</td><td><div class="status" role="group" aria-label="סטטוס: '+esc(g[1])+'">'+labels.map(function(l,j){return '<button type="button" data-g="'+i+'" data-v="'+j+'" aria-pressed="'+(v===j)+'">'+l+'</button>';}).join("")+'</div></td></tr>';}).join("")+'</tbody></table></div>';
+}
+var VIEWS={now:viewNow,routines:viewRoutines,people:viewPeople,scholars:viewScholars,toolkit:viewToolkit,goals:viewGoals};
+function render(){
+  var v=(location.hash||"#now").slice(1); if(!VIEWS[v]) v="now";
+  document.querySelectorAll("#tabs a").forEach(function(a){ if(a.getAttribute("href")==="#"+v) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+  app.innerHTML = VIEWS[v]() + '<p class="save">הסימונים נשמרים אוטומטית.</p>';
+  var titles={now:"מה עושים החודש",routines:"שגרות קבועות",people:"עם מי עובדים",scholars:"המלגאים",toolkit:"ארגז כלים",goals:"מעקב יעדים"};
+  document.title = titles[v]+" – עוגן";
+}
+app.addEventListener("change",function(e){ var id=e.target.getAttribute("data-id"); if(!id) return; if(e.target.checked) S.done[id]=1; else delete S.done[id]; persist(); render(); });
+app.addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b) return;
+  if(b.hasAttribute("data-m")){ sel=+b.getAttribute("data-m"); render(); return; }
+  if(b.hasAttribute("data-g")){ S.goals[b.getAttribute("data-g")]=+b.getAttribute("data-v"); persist(); render(); }
+});
+window.addEventListener("hashchange",render);
+render();
+})();
+</script>
+</body>
+</html>
